@@ -6,7 +6,7 @@ var baseURI = "http://www.civicdata.com/api/action/datastore_search_sql?sql=";
 var selVar;
 var fullStartDate = 1826;
 // var fullStartDate = 365;
-
+$.ajaxSetup({ cache: false })
 var url = window.location.href;    
 if (url.indexOf('?') !== -1){
   selVar=location.search.slice(1);
@@ -35,6 +35,8 @@ var subtype="";
 var returnedObj="";
 var toggleSubtype=[];
 var toggleSubtypeDate=[];
+
+$.ajaxSetup({ cache: false });
 
 var d={};
 d['id']="";
@@ -88,6 +90,7 @@ var verify= function(selVar){
   requestJSON(urlLast365, function(json) {
 
     console.log("GGGGGGGGGGGGGGGGGGEEEEEEEEEEEEEEEEEEEETTTTTTTTTTTTTTTTTTT_#1");
+    console.log(json);
 
     var records = json.result.records;
     records.forEach(function(record, inc, array) {
@@ -485,6 +488,7 @@ var verify= function(selVar){
                 var returnObj = ([Object.keys(output)[0]]).concat(returnObj);
 
                 window.returningObj = returnObj;
+                window.weeklyReturningObj = returnObj;
 
                 console.log(Object.keys(output)[0],'_____');
 
@@ -497,6 +501,8 @@ var verify= function(selVar){
               
                 });
 
+                window.datesingArray = datesArray;
+
                 var ar = [];
 
                 for (var i = 0; i < output[d.id].length; i++){
@@ -507,10 +513,12 @@ var verify= function(selVar){
 
                 console.log(ar);
 
-
                 var total = 0;
 
-                wereSum = ar.reduce((pv, cv) => pv+cv, 0);
+                wereSum = ar.reduce(function(pv, cv, i, ar) {return pv+cv});
+                //             arr[i].reduce(function(a, b){
+                //     return a >= b ? a : b;
+                // }
 
                 // var wereTotal = function (data) {
                 //   for(var i=0, n=data.length; i < n; i++){ 
@@ -1371,18 +1379,49 @@ function monthSelect(months){
 
   // Helper function to make request for JSONP.
 
+// loadXMLDoc(url);
+
 function requestJSON(url, callback) {
-    $.ajax({
-      beforeSend: function() {
-        // Handle the beforeSend event
-      },
-      url: url,
-      complete: function(xhr) {
-        callback.call(null, xhr.responseJSON);
-         
-      }
-    });
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+           if (xmlhttp.status == 200) {
+               var jsonResponse = JSON.parse(xmlhttp.responseText);
+               // document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+               callback.call(null, jsonResponse);
+           }
+           else if (xmlhttp.status == 400) {
+              alert('There was an error 400');
+           }
+           else {
+               alert(url,'something else other than 200 was returned');
+           }
+        }
+    };
+
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
 }
+
+// function requestJSON(url, callback) {
+//     $.ajaxSetup({ cache: false });
+//     $.ajax({
+//       async: false,
+//       type: "get",
+//       cache: false,
+//       beforeSend: function() {
+//         // Handle the beforeSend event
+//         console.log('before');
+//       },
+//       dataType: 'json',
+//       url: url,
+//       complete: function(xhr) {
+//         callback.call(null, xhr.responseJSON);
+//         console.log('complete');
+//       }
+//     });
+// }
 
 
  function clone(obj) {
