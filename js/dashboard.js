@@ -116,7 +116,7 @@ var verify= function(selVar){
 
     //extract permits applied for the last year
     var appliedLast365Days = firstRecords.filter(function(d) { 
-      console.log(d.AppliedDate, startDateMoment);
+      // console.log(d.AppliedDate, startDateMoment);
       return d.AppliedDate > startDateMoment; 
     });
 
@@ -233,6 +233,9 @@ var verify= function(selVar){
         });
         return [type].concat(a);
       })
+
+    console.log(columnData);
+    console.log(months);
 
 
     // (H) create the bar chart with months and types breakdown 
