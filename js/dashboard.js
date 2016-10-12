@@ -1407,24 +1407,24 @@ function requestJSON(url, callback) {
     xmlhttp.send();
 }
 
-// function requestJSON(url, callback) {
-//     $.ajaxSetup({ cache: false });
-//     $.ajax({
-//       async: false,
-//       type: "get",
-//       cache: false,
-//       beforeSend: function() {
-//         // Handle the beforeSend event
-//         console.log('before');
-//       },
-//       dataType: 'json',
-//       url: url,
-//       complete: function(xhr) {
-//         callback.call(null, xhr.responseJSON);
-//         console.log('complete');
-//       }
-//     });
-// }
+ function requestJSON(url, callback) {
+     $.ajaxSetup({ cache: false });
+     $.ajax({
+       async: false,
+       type: "get",
+       cache: false,
+       beforeSend: function() {
+         // Handle the beforeSend event
+         console.log('before');
+       },
+       dataType: 'jsonp',
+       url: url,
+       complete: function(xhr) {
+         callback.call(null, xhr.responseJSON);
+         console.log('complete');
+       }
+     });
+ }
 
 
  function clone(obj) {
